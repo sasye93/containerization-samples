@@ -1,0 +1,9 @@
+<component name="libraryTable">
+  <library name="sbt: de.tuda.stg:retypecheck_2.12:0.6.0:jar">
+    <CLASSES>
+      <root url="jar://$USER_HOME$/AppData/Local/Coursier/cache/v1/https/dl.bintray.com/stg-tud/maven/de/tuda/stg/retypecheck_2.12/0.6.0/retypecheck_2.12-0.6.0.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>
