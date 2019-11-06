@@ -1,5 +1,4 @@
-package thesis.samples
-package timeservice
+package thesis.samples.examples
 
 import loci._
 import loci.transmitter.rescala._
@@ -50,27 +49,27 @@ object db{
     import bson._
 
     // Use a Connection String
-    val mongoClient: MongoClient = MongoClient(Tools.globalDbIp(MultitierApi))
-    val mongoClient2: MongoClient = MongoClient(Tools.localDbIp(Service))
+    val clientModule: MongoClient = MongoClient(Tools.globalDbIp(MultitierApi))
+    val clientService: MongoClient = MongoClient(Tools.localDbIp(Service))
 
-    val database: MongoDatabase = mongoClient.getDatabase("mydb")
-    val database2: MongoDatabase = mongoClient2.getDatabase("mydb")
-    //database.createCollection("global")
-    database2.createCollection("local")
-    val collection = database.getCollection("global")
-    val collection2 = database2.getCollection("local")
-    val doc: Document = bson.Document("_id" -> 0, "name" -> "MongoDB", "type" -> "database",
-      "count" -> 1, "info" -> bson.Document("x" -> 203, "y" -> 102))
-    collection.insertOne(doc).subscribe(new Observer[Completed] {
+    val dbModule: MongoDatabase = clientModule.getDatabase("mydb")
+    val dbService: MongoDatabase = clientService.getDatabase("mydb")
+
+    //dbModule.createCollection("global")
+    dbService.createCollection("local")
+
+    val moduleCol = dbModule.getCollection("global")
+    val serviceCol = dbService.getCollection("local")
+
+    val doc: Document = bson.Document("name" -> "MongoDB", "type" -> "database", "count" -> 1, "info" -> bson.Document("x" -> 203, "y" -> 102))
+
+    val resultObserver = new Observer[Completed] {
       override def onNext(result: Completed): Unit = println("Inserted")
       override def onError(e: Throwable): Unit = println("Failed")
       override def onComplete(): Unit = println("Completed")
-    })
-    collection2.insertOne(doc).subscribe(new Observer[Completed] {
-      override def onNext(result: Completed): Unit = println("Inserted")
-      override def onError(e: Throwable): Unit = println("Failed")
-      override def onComplete(): Unit = println("Completed")
-    })
+    }
+    moduleCol.insertOne(doc).subscribe(resultObserver)
+    serviceCol.insertOne(doc).subscribe(resultObserver)
   }
 }
 @multitier protected[thesis] trait ServerImpl extends Api{
@@ -85,12 +84,13 @@ object db{
     }
   }
 }
-@multitier /*@containerize(
+@multitier @containerize(
   """{
+    |  "app": "timeservice",
     |  "globalDb": "mongo",
     |  "stateful": "true"
     }"""
-)*/ object MultitierApi extends ServerImpl with ClientImpl
+) object MultitierApi extends ServerImpl with ClientImpl
 
 @service(
   """{
@@ -99,31 +99,28 @@ object db{
     |  "replicas": 2,
     |  "attachable": "false"
     |}"""
-)
-object Service extends App {
+) object Service extends App {
   loci.multitier start new Instance[MultitierApi.Server](
     listen[MultitierApi.Client] { TCP(4577, Tools.publicIp) }
   )
 }
-
 @service(
   """{
     |  "type": "service",
     |  "replicas": 3,
-    |  "description": "this is a test service! WOOOOOOOOOOW ",
-    |  "ports": "5,423,412,64363"
+    |  "description": "-"
     |}"""
 )
 object Client extends App {
   loci.multitier start new Instance[MultitierApi.Client](
     connect[MultitierApi.Server] { TCP(Tools.resolveIp(Service), 4577) }
   )
-}
+}/*
 object Peer extends App {
   loci.multitier start new Instance[MultitierApi.Peer](
-    listen[MultitierApi.Peer] { TCP(3, Tools.publicIp) }
+    listen[MultitierApi.Peer] { TCP(4578, Tools.publicIp) }
   )
   loci.multitier start new Instance[MultitierApi.Peer](
-    listen[MultitierApi.Peer] { TCP(4, Tools.publicIp) }
+    listen[MultitierApi.Peer] { TCP(4579, Tools.publicIp) }
   )
-}
+}*/

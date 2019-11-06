@@ -66,34 +66,31 @@ package object db{
     })
   }
   val publicMessage : Evt[String] on Server = on[Server]{ implicit ! => Evt[String] }
-  /*val publicMessage = on[Server] sbj { client: Remote[Client] =>
-
-  }*/
 }
-@multitier /*@containerize(
+//todo change 'home' to your project location.
+@multitier @containerize(
   """{
-    |  "disabled": "true",
-    |  "home": "C:\Users\Simon S\Dropbox\Masterarbeit\Code\examplesScalaLoci",
-    |  "secrets": "(test,secrets)|(test2,secrets)"
+    |  "app": "chat",
+    |  "home": "C:\Users\Simon S\Desktop\containerization-samples",
+    |  "secrets": "(mysecret,files\secrets)|(mysecret2,files\secrets)"
     |}"""
-)*/ object MultitierApi extends ServerImpl with ClientImpl
+) object MultitierApi extends ServerImpl with ClientImpl
 
 @service(
   """{
     |  "localDb": "mongo",
-    |  "secrets": "test",
+    |  "secrets": "mysecret",
     |  "replicas": 2
     |}"""
-)
-object Server extends App {
+) object Server extends App {
   multitier start new Instance[MultitierApi.Server](
     listen[MultitierApi.Client] { TCP(43053, Tools.publicIp) })
 }
 @service(
   """{
     |  "replicas": 2
-    |}""")
-object Client extends App {
+    |}"""
+) object Client extends App {
   multitier start new Instance[MultitierApi.Client](
     connect[MultitierApi.Server] { TCP(Tools.resolveIp(Server), 43053) })
 }

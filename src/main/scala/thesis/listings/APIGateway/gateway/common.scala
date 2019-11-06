@@ -1,17 +1,15 @@
 package thesis.listings.APIGateway.gateway
 
-class common {
-  import akka.actor.ActorSystem
-  import akka.stream.ActorMaterializer
-  import akka.http.scaladsl.Http
-  import akka.http.scaladsl.HttpExt
-  import akka.http.scaladsl.ConnectionContext
-  import akka.http.scaladsl.server.Route
+import akka.actor.ActorSystem
+import akka.stream.ActorMaterializer
+import akka.http.scaladsl._
+import akka.http.scaladsl.server.Route
 
-  import scala.concurrent.Await
-  import scala.concurrent.Future
-  import scala.concurrent.duration.Duration
-  import scala.concurrent.ExecutionContext.Implicits.global
+import scala.concurrent._
+import scala.concurrent.duration.Duration
+import scala.concurrent.ExecutionContext.Implicits.global
+
+class common {
 
   trait HttpServer {
     def stop(): Unit

@@ -20,7 +20,11 @@ object Task {
   implicit val taskSerializer: ReadWriter[Task] = macroRW[Task]
 }
 
-@multitier object MasterWorker {
+@multitier @containerize(
+  """{
+    |  "app": "masterworker"
+  }"""
+) object MasterWorker {
   @peer type Master <: { type Tie <: Multiple[Worker] }
   @peer type Worker <: { type Tie <: Single[Master] }
 
@@ -83,13 +87,17 @@ object Task {
   }
 }
 
-@service object MasterWorkerMain extends App {
+@service object Master extends App {
   multitier start new Instance[MasterWorker.Master](
     listen[MasterWorker.Worker] {
       TCP(1095, publicIp)
     })
 }
-@service object MasterWorkerSide1 extends App{
+@service(
+  """{
+    |  "replicas": 1
+  }"""
+) object Worker extends App{
   multitier start new Instance[MasterWorker.Worker](
-    connect[MasterWorker.Master] { TCP(resolveIp(MasterWorkerMain), 1095) })
+    connect[MasterWorker.Master] { TCP(resolveIp(Master), 1095) })
 }

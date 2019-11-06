@@ -1,6 +1,5 @@
 package thesis.listings.APIGateway.gateway.api
 
-import akka.actor.ActorSystem
 import loci.contexts.Pooled.Implicits.global
 import akka.actor.ActorSystem
 import akka.http.scaladsl.Http
@@ -15,12 +14,10 @@ import loci.communicator.tcp._
 import loci.container._
 import rescala.default._
 
-import scala.io.StdIn
 import thesis.listings.APIGateway.timeservice.{Formatter, GatewayApi, MultitierApi}
 
 import scala.concurrent.duration.Duration
 import scala.concurrent.{Await, Future, duration}
-import scala.util.control.Breaks.break
 
 @multitier object ConsumerApi extends GatewayApi{
   @peer type Gateway <: { type Tie <: Optional[MultitierApi.Formatter] }
@@ -35,23 +32,9 @@ import scala.util.control.Breaks.break
   private def getCurrentDateTime : String on Gateway = on[Gateway] { implicit! => getCurrentDate + ", " + getCurrentTime } // aggregation
   private def getFormattedDateTime : String on Gateway = on[Gateway] { implicit! => asyncCall ((remote call MultitierApi.getCurrentFormattedDateTime).asLocal) }
 
-  //val clientTime : Signal[Option[Long]] on Gateway = placed{ MultitierApi.clientTime.asLocal }
   var services : Int on Gateway = placed{ implicit! => 0 }
 
   on[Gateway] { implicit ! =>
-
-    //val display = Signal { (new SimpleDateFormat("hh:mm:ss")) format new Date(clientTime.apply) }
-    /**
-    clientTime.changed observe { x =>
-      print(x.getOrElse(0L))
-      println(clientTime.now.getOrElse(0L))
-      //timer.time = MultitierApi.t.asLocal
-    }
-     */
-
-    ////MultitierApi.clientTime.asLocal.changed observe println
-    //MultitierApi.getTime.asLocal.changed observe print
-
     remote[MultitierApi.Formatter].joined observe { implicit ! => services += 1 }
     remote[MultitierApi.Formatter].left observe { implicit ! => services -= 1 }
   }
@@ -124,7 +107,7 @@ import scala.util.control.Breaks.break
 }
 @gateway(
   """{
-    |  "ports": "8085,8086,8420,8432"
+    |  "ports": "8420,8432"
     |}""")
 object APIGateway extends App {
   loci.multitier start new Instance[ConsumerApi.Gateway](

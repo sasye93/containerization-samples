@@ -62,8 +62,7 @@ package object sha256{
 }
 @multitier @containerize(
   """{
-    |  "disabled":"true",
-    |  "app": "testapp"
+    |  "app": "pipeline"
   }""") object Pipeline{
   @peer type Peer
 
@@ -297,8 +296,7 @@ package object sha256{
 
 @gateway(
   """{
-    |  "ports":"8424",
-    |  "replicas":1
+    |  "ports":"8424"
     }"""
 )
 object Input extends App {

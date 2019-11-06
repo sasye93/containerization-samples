@@ -1,4 +1,4 @@
-package thesis.listings
+package thesis.listings.Interfaces
 
 import loci._
 import loci.container._
