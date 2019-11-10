@@ -1,3 +1,7 @@
+/**
+ * This is an example for how an API gateway that takes requests and directs them to the underlying services.
+ * This is listing 02 in the thesis.
+ */
 package thesis.listings.APIGateway.gateway.api
 
 import loci.contexts.Pooled.Implicits.global
@@ -27,6 +31,9 @@ import scala.concurrent.{Await, Future, duration}
       case None => "Error: Could not retrieve data from Service."
     }
 
+  /**
+   * Calls to the underyling {@link thesis.listings.APIGateway.timeservice.TimeService} service.
+   */
   private def getCurrentTime : String on Gateway = on[Gateway]{ implicit! => asyncCall ((remote call MultitierApi.getCurrentTime).asLocal) }
   private def getCurrentDate : String on Gateway = on[Gateway] { implicit! => asyncCall ((remote call MultitierApi.getCurrentDate).asLocal) }
   private def getCurrentDateTime : String on Gateway = on[Gateway] { implicit! => getCurrentDate + ", " + getCurrentTime } // aggregation
@@ -41,6 +48,9 @@ import scala.concurrent.{Await, Future, duration}
   def main() : Unit on Gateway = on[Gateway]{ implicit! =>
     implicit val system : ActorSystem = ActorSystem("api_gateway")
     implicit val materializer : ActorMaterializer = ActorMaterializer()
+    /**
+     * exception handlers, a.o. 404.
+     */
     implicit def exceptionHandler: ExceptionHandler =
       ExceptionHandler {
         case err : Throwable =>
@@ -55,6 +65,9 @@ import scala.concurrent.{Await, Future, duration}
         .handleNotFound { complete(HttpResponse(StatusCodes.NotFound, entity = "Route not found. Maybe your API type doesn't support this action?")) }
         .result()
 
+    /**
+     * The frontend html page.
+     */
     def html(gatewayType : this.GATEWAY_API_TYPE) : String =
       s"""
         |<h3>You have contacted the TimeService API Gateway - This is the gateway for ${ gatewayType match{ case this.GATEWAY_API_CONSUMER => "consumers" case this.GATEWAY_API_BUSINESS => "business customers" } }.</h3>
@@ -68,6 +81,9 @@ import scala.concurrent.{Await, Future, duration}
         |</ul>
         |""".stripMargin
 
+    /**
+     * Callable GET routes.
+     */
     def IndexRoute(gatewayType : this.GATEWAY_API_TYPE) =
       get {
         pathSingleSlash {
@@ -83,6 +99,9 @@ import scala.concurrent.{Await, Future, duration}
             complete(HttpEntity(ContentTypes.`text/html(UTF-8)`, getCurrentDateTime.toString))
           }
       }
+    /**
+     * Providing two different API's.
+     */
     val consumerRoutes = IndexRoute(this.GATEWAY_API_CONSUMER)
     val businessRoutes = IndexRoute(this.GATEWAY_API_BUSINESS) ~
       get  {
@@ -91,12 +110,12 @@ import scala.concurrent.{Await, Future, duration}
         }
       }
     val bindingFutures = List{
-      Http().bindAndHandle(Route.handlerFlow(consumerRoutes), Tools.publicIp, 8420)
-      Http().bindAndHandle(Route.handlerFlow(businessRoutes), Tools.publicIp, 8432)
+      Http().bindAndHandle(Route.handlerFlow(consumerRoutes), Tools.publicIp, 8080)
+      Http().bindAndHandle(Route.handlerFlow(businessRoutes), Tools.publicIp, 8081)
     }
 
-    println(s"API Gateway - consumer API - online at http://localhost:8420/")
-    println(s"API Gateway - business API - online at http://localhost:8432/")
+    println(s"API Gateway - consumer API - online at http://localhost:8080/")
+    println(s"API Gateway - business API - online at http://localhost:8081/")
     while(scala.io.Source.stdin.getLines.next() != "quit"){}
 
     bindingFutures foreach { b => // cleanup on shutdown
@@ -107,11 +126,11 @@ import scala.concurrent.{Await, Future, duration}
 }
 @gateway(
   """{
-    |  "ports": "8420,8432"
-    |}""")
-object APIGateway extends App {
+    |  "ports": "8080,8081"
+    |}"""
+) object APIGateway extends App {
   loci.multitier start new Instance[ConsumerApi.Gateway](
-    connect[MultitierApi.Formatter] { TCP(Tools.resolveIp(Formatter), 43082) } //and
+    connect[MultitierApi.Formatter] { TCP(Tools.resolveIp(Formatter), 8153) } //and
       //connect[MultitierApi.Manipulator] { TCP("localhost", 43083) }
   )
 }

@@ -1,3 +1,7 @@
+/**
+ * This is a containerized version of an adjusted version of the simple chat example,
+ * The server makes the received messages persistent in a database.
+ */
 package thesis.samples
 package chat
 
@@ -7,7 +11,6 @@ import loci.serializer.upickle._
 import loci.communicator.tcp._
 import rescala.default._
 
-import loci.container.Tools._
 import loci.container._
 import org.mongodb.scala.bson.BsonString
 import thesis.samples.common.Db
@@ -67,11 +70,11 @@ package object db{
   }
   val publicMessage : Evt[String] on Server = on[Server]{ implicit ! => Evt[String] }
 }
-//todo change 'home' to your project location.
+//todo: change 'home' to your project location.
 @multitier @containerize(
   """{
     |  "app": "chat",
-    |  "home": "C:\Users\Simon S\Desktop\containerization-samples",
+    |  "home": "C:\Users\sasye93\Desktop\containerization-samples",
     |  "secrets": "(mysecret,files\secrets)|(mysecret2,files\secrets)"
     |}"""
 ) object MultitierApi extends ServerImpl with ClientImpl
@@ -84,7 +87,7 @@ package object db{
     |}"""
 ) object Server extends App {
   multitier start new Instance[MultitierApi.Server](
-    listen[MultitierApi.Client] { TCP(43053, Tools.publicIp) })
+    listen[MultitierApi.Client] { TCP(8181, Tools.publicIp) })
 }
 @service(
   """{
@@ -92,5 +95,5 @@ package object db{
     |}"""
 ) object Client extends App {
   multitier start new Instance[MultitierApi.Client](
-    connect[MultitierApi.Server] { TCP(Tools.resolveIp(Server), 43053) })
+    connect[MultitierApi.Server] { TCP(Tools.resolveIp(Server), 8181) })
 }

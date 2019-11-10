@@ -9,8 +9,8 @@
         <parameter value="-Xlint" />
       </parameters>
       <plugins>
-        <plugin path="$USER_HOME$/AppData/Local/Coursier/cache/v1/https/repo1.maven.org/maven2/org/scalamacros/paradise_2.12.8/2.1.1/paradise_2.12.8-2.1.1.jar" />
-        <plugin path="$USER_HOME$/Dropbox/Masterarbeit/Code/examplesScalaLoci/containerize.jar" />
+        <plugin path="C:\Users\sasye93\Desktop\containerization-samples\lib\containerize.jar" />
+        <plugin path="C:\Users\sasye93\AppData\Local\Coursier\cache\v1\https\repo1.maven.org\maven2\org\scalamacros\paradise_2.12.8\2.1.1\paradise_2.12.8-2.1.1.jar" />
       </plugins>
     </profile>
   </component>

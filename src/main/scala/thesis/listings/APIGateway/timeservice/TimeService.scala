@@ -1,3 +1,8 @@
+/**
+ * This is an re-implementation of the TimeService example, adjusted to demonstrate the functionality of the api gateway example in
+ * {@link thesis.listings.APIGateway.gateway.api.consumer}.
+ *
+ */
 package thesis.listings.APIGateway.timeservice
 
 import loci._
@@ -98,26 +103,26 @@ import thesis.listings.APIGateway.gateway.api.ConsumerApi
 @service object Server extends App {
   loci.multitier start new Instance[MultitierApi.Server](
     listen[MultitierApi.Formatter] {
-      TCP(43062, Tools.publicIp)
+      TCP(8151, Tools.publicIp)
     }
   )
 }
 @service object Formatter extends App {
     loci.multitier start new Instance[MultitierApi.Formatter](
       connect[MultitierApi.Server] {
-        TCP(Tools.resolveIp(Server), 43062)
+        TCP(Tools.resolveIp(Server), 8151)
       } and
         connect[MultitierApi.Manipulator] {
-          TCP(43063, Tools.publicIp).firstConnection
+          TCP(8152, Tools.publicIp).firstConnection
         } and
         connect[ConsumerApi.Gateway] {
-          TCP(43082, Tools.publicIp).firstConnection
+          TCP(8153, Tools.publicIp).firstConnection
         }
     )
   }
 @service object Manipulator extends App {
   loci.multitier start new Instance[MultitierApi.Manipulator](
-    connect[MultitierApi.Formatter] { TCP(Tools.resolveIp(Formatter), 43063) } //and
+    connect[MultitierApi.Formatter] { TCP(Tools.resolveIp(Formatter), 8152) } //and
       //connect[thesis.components.gateway.api.ConsumerApi.Gateway] { TCP(43083, Tools.publicIp).firstConnection }
   )
 }

@@ -1,12 +1,12 @@
 /**
-  *
-  * this needs a running mongoDB on localhost:27017.
+  * This is the traditional, uncontainerized ScalaLoci version of the pipeline evaluation example.
+  * this needs a running mongoDB on localhost:27017 (one might simply run a docker mongo container).
   * remember to mask special characters in your http request, like space = %20, hashtag = %23.
   * You can use cURL to post request, http://localhost:8424.
   */
 
-package thesis.samples.evaluation
-package traditional
+package thesis.samples.eval
+package classic
 
 import java.util.{UUID,Calendar}
 
@@ -236,50 +236,50 @@ package object sha256{
 object startServices extends App{
   multitier start new Instance[Pipeline.Archiver](
     listen[Pipeline.Hasher] {
-      TCP(1101, "127.0.0.1")
+      TCP(8161, "localhost")
     } and
       listen[Pipeline.Input] {
-        TCP(1112, "127.0.0.1")
+        TCP(8162, "localhost")
       } and
       listen[Pipeline.Filter] {
-        TCP(1103, "127.0.0.1")
+        TCP(8163, "localhost")
       })
   multitier start new Instance[Pipeline.Hasher](
     listen[Pipeline.Output] {
-      TCP(1104, "127.0.0.1")
+      TCP(8164, "localhost")
     } and
       connect[Pipeline.Filter] {
-        TCP(1105, "127.0.0.1").firstConnection
+        TCP(8165, "localhost").firstConnection
       } and
       connect[Pipeline.Archiver] {
-        TCP("127.0.0.1", 1101)
+        TCP("localhost", 8161)
       })
   multitier start new Instance[Pipeline.Filter](
     listen[Pipeline.Tagger] {
-      TCP(1106, "127.0.0.1")
+      TCP(8166, "localhost")
     } and
       connect[Pipeline.Hasher] {
-        TCP("127.0.0.1", 1105)
+        TCP("localhost", 8165)
       } and
       connect[Pipeline.Archiver] {
-        TCP("127.0.0.1", 1103)
+        TCP("localhost", 8163)
       })
   multitier start new Instance[Pipeline.Tagger](
     listen[Pipeline.Input] {
-      TCP(1109, "127.0.0.1")
+      TCP(8169, "localhost")
     } and
       connect[Pipeline.Filter] {
-        TCP("127.0.0.1", 1106)
+        TCP("localhost", 8166)
       })
   multitier start new Instance[Pipeline.Output](
     connect[Pipeline.Hasher] {
-      TCP("127.0.0.1", 1104)
+      TCP("localhost", 8164)
     })
   multitier start new Instance[Pipeline.Input](
     connect[Pipeline.Tagger] {
-      TCP("127.0.0.1", 1109)
+      TCP("localhost", 8169)
     } and
       connect[Pipeline.Archiver] {
-        TCP("127.0.0.1", 1112)
+        TCP("localhost", 8162)
       })
 }

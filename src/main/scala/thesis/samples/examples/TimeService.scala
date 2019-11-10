@@ -1,4 +1,8 @@
-package thesis.samples.examples
+/**
+ * This is a containerized version of the TimeService example.
+ */
+package thesis.samples
+package timeservice
 
 import loci._
 import loci.transmitter.rescala._
@@ -8,7 +12,6 @@ import rescala.default._
 import java.util.{Calendar, Date}
 import java.text.SimpleDateFormat
 
-import loci.container.Tools._
 import loci.container._
 
 /**
@@ -101,7 +104,7 @@ object db{
     |}"""
 ) object Service extends App {
   loci.multitier start new Instance[MultitierApi.Server](
-    listen[MultitierApi.Client] { TCP(4577, Tools.publicIp) }
+    listen[MultitierApi.Client] { TCP(8191, Tools.publicIp) }
   )
 }
 @service(
@@ -113,7 +116,7 @@ object db{
 )
 object Client extends App {
   loci.multitier start new Instance[MultitierApi.Client](
-    connect[MultitierApi.Server] { TCP(Tools.resolveIp(Service), 4577) }
+    connect[MultitierApi.Server] { TCP(Tools.resolveIp(Service), 8191) }
   )
 }/*
 object Peer extends App {

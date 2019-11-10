@@ -12,7 +12,6 @@ resolvers += Resolver.bintrayRepo("stg-tud", "maven")
 
 libraryDependencies ++= Seq(
   "de.tuda.stg" %% "rescala" % "0.26.0",
-  "org.scala-lang" % "scala-reflect" % scalaVersion.value,
   "de.tuda.stg" %% "scala-loci-communicator-tcp" % "0.3.0",
   "org.mongodb.scala" %% "mongo-scala-driver" % "2.6.0",
   "com.typesafe.akka" %% "akka-http" % "10.1.8",
@@ -26,3 +25,7 @@ libraryDependencies ++= Seq(
 addCompilerPlugin("org.scalamacros" % "paradise" % "2.1.1" cross CrossVersion.patch)
 
 lazy val root = project.in(file("."))
+
+//add containerization extension (build stage).
+autoCompilerPlugins := true
+scalacOptions += s"-Xplugin:${baseDirectory.value.getAbsolutePath}\\lib\\containerize.jar"

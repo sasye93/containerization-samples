@@ -1,3 +1,6 @@
+/**
+ * This is a containerized version of the Master-Worker example.
+ */
 package thesis.samples
 package worker
 
@@ -90,7 +93,7 @@ object Task {
 @service object Master extends App {
   multitier start new Instance[MasterWorker.Master](
     listen[MasterWorker.Worker] {
-      TCP(1095, publicIp)
+      TCP(8175, publicIp)
     })
 }
 @service(
@@ -99,5 +102,5 @@ object Task {
   }"""
 ) object Worker extends App{
   multitier start new Instance[MasterWorker.Worker](
-    connect[MasterWorker.Master] { TCP(resolveIp(Master), 1095) })
+    connect[MasterWorker.Master] { TCP(resolveIp(Master), 8175) })
 }

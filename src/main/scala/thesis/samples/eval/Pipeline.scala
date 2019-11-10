@@ -1,11 +1,11 @@
 /**
- *
+ * This is the containerized version of the pipeline evaluation example.
  * remember to mask special characters in your http request, like space = %20, hashtag = %23.
   * You can use cURL to post request, http://localhost:8424.
  */
 
-package thesis.samples.evaluation
-package containerized
+package thesis.samples.eval
+package msa
 
 import java.util.{UUID,Calendar}
 
@@ -241,13 +241,13 @@ package object sha256{
 ) object Archiver extends App{
   multitier start new Instance[Pipeline.Archiver](
     listen[Pipeline.Hasher] {
-      TCP(1101, Tools.publicIp)
+      TCP(8161, Tools.publicIp)
     } and
       listen[Pipeline.Input] {
-        TCP(1102, Tools.publicIp)
+        TCP(8162, Tools.publicIp)
       } and
       listen[Pipeline.Filter] {
-        TCP(1103, Tools.publicIp)
+        TCP(8163, Tools.publicIp)
       })
 }
 @service(
@@ -257,40 +257,40 @@ package object sha256{
 ) object Hasher extends App {
   multitier start new Instance[Pipeline.Hasher](
     listen[Pipeline.Output] {
-      TCP(1104, Tools.publicIp)
+      TCP(8164, Tools.publicIp)
     } and
       connect[Pipeline.Filter] {
-        TCP(1105, publicIp).firstConnection
+        TCP(8165, publicIp).firstConnection
       } and
       connect[Pipeline.Archiver] {
-        TCP(Tools.resolveIp(Archiver), 1101)
+        TCP(Tools.resolveIp(Archiver), 8161)
       })
 }
 @service object Filter extends App {
   multitier start new Instance[Pipeline.Filter](
     listen[Pipeline.Tagger] {
-      TCP(1106, Tools.publicIp)
+      TCP(8166, Tools.publicIp)
     } and
       connect[Pipeline.Hasher] {
-        TCP(Tools.resolveIp(Hasher), 1105)
+        TCP(Tools.resolveIp(Hasher), 8165)
       } and
       connect[Pipeline.Archiver] {
-        TCP(Tools.resolveIp(Archiver), 1103)
+        TCP(Tools.resolveIp(Archiver), 8163)
       })
 }
 @service object Tagger extends App {
   multitier start new Instance[Pipeline.Tagger](
     listen[Pipeline.Input] {
-      TCP(1102, Tools.publicIp)
+      TCP(8162, Tools.publicIp)
     } and
       connect[Pipeline.Filter] {
-        TCP(Tools.resolveIp(Filter), 1106)
+        TCP(Tools.resolveIp(Filter), 8166)
       })
 }
 @service object Output extends App {
   multitier start new Instance[Pipeline.Output](
     connect[Pipeline.Hasher] {
-      TCP(Tools.resolveIp(Hasher), 1104)
+      TCP(Tools.resolveIp(Hasher), 8164)
     })
 }
 
@@ -302,9 +302,9 @@ package object sha256{
 object Input extends App {
   multitier start new Instance[Pipeline.Input](
     connect[Pipeline.Tagger] {
-      TCP(Tools.resolveIp(Tagger), 1102)
+      TCP(Tools.resolveIp(Tagger), 8162)
       } and
       connect[Pipeline.Archiver] {
-        TCP(Tools.resolveIp(Archiver), 1102)
+        TCP(Tools.resolveIp(Archiver), 8162)
       })
 }

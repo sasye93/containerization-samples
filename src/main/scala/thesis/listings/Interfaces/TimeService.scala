@@ -1,7 +1,11 @@
+/**
+  * This is an example for how to separate implementations using interfaces,
+  * so that services are separately deployable.
+  * This is listing 01 in the thesis.
+  */
 package thesis.listings.Interfaces
 
 import loci._
-import loci.container._
 import loci.transmitter.rescala._
 import loci.serializer.upickle._
 import loci.communicator.tcp._
