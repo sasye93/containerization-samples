@@ -10,10 +10,10 @@ The results of the evaluation (chapter 8 in thesis).
 Contains the thesis' listings and sample code.
 
 #### package thesis/listings
-* **APIGateway**: Corresponds to thesis' listing02. The gateway sample code is in ./gateway/api, the service code in ./timeservice
+* **APIGateway**: Corresponds to thesis' listing02. The gateway sample code is in ./gateway/api, the service code in ./timeservice.
 * **Interfaces**: Corresponds to thesis' listing01.
 
-### package thesis/samples
+#### package thesis/samples
 Contains usage examples.
 
 * **./common**: Contains commonly used code (db).
