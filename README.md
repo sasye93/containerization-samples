@@ -1,5 +1,5 @@
 # containerization-samples
-Samples for the ScalaLoci Containerization Extension
+Samples for the ScalaLoci Containerization Extension. This should work out of the box.
 
 ## Structure
 
