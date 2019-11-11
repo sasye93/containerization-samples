@@ -118,7 +118,8 @@ object Client extends App {
   loci.multitier start new Instance[MultitierApi.Client](
     connect[MultitierApi.Server] { TCP(Tools.resolveIp(Service), 8191) }
   )
-}/*
+}
+/*
 object Peer extends App {
   loci.multitier start new Instance[MultitierApi.Peer](
     listen[MultitierApi.Peer] { TCP(4578, Tools.publicIp) }
