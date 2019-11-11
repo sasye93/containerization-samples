@@ -2,7 +2,7 @@ name := "containerization-samples"
 
 organization := "de.tuda.stg"
 
-version := "0.0.0"
+version := "0.1.0"
 
 scalaVersion := "2.12.8"
 
@@ -26,6 +26,6 @@ addCompilerPlugin("org.scalamacros" % "paradise" % "2.1.1" cross CrossVersion.pa
 
 lazy val root = project.in(file("."))
 
-//add containerization extension (build stage).
+//add containerization extension (build stage, macros are automatically added because .jar lies in unmanaged /lib folder).
 autoCompilerPlugins := true
-scalacOptions += s"-Xplugin:${baseDirectory.value.getAbsolutePath}\\lib\\containerize.jar"
+scalacOptions ++= Seq(s"-Xplugin:${baseDirectory.value.getAbsolutePath}\\lib\\containerize.jar", "-P:containerize-build:stage=run")

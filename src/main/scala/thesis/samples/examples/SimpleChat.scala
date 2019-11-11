@@ -16,7 +16,7 @@ import org.mongodb.scala.bson.BsonString
 import thesis.samples.common.Db
 
 package object db{
-  lazy val getDb : Db = new Db(Tools.localDbIp(Server), "chat") //todo on Server
+  lazy val getDb : Db = new Db(Tools.localDbIp(Server), "chat")
 }
 /**
   * Public Api

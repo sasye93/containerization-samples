@@ -7,6 +7,7 @@
       <option name="featureWarnings" value="true" />
       <parameters>
         <parameter value="-Xlint" />
+        <parameter value="-P:containerize-build:stage=run" />
       </parameters>
       <plugins>
         <plugin path="C:\Users\sasye93\Desktop\containerization-samples\lib\containerize.jar" />
