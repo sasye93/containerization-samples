@@ -92,7 +92,7 @@ package object db{
 @service(
   """{
     |  "replicas": 2,
-    |  "script": "files\script"
+    |  "script": "files\script.sh"
     |}"""
 ) object Client extends App {
   multitier start new Instance[MultitierApi.Client](

@@ -62,8 +62,9 @@ package object sha256{
 }
 @multitier @containerize(
   """{
-    |  "app": "pipeline"
-  }""") object Pipeline{
+    |  "app":"pipeline"
+    |}"""
+) object Pipeline{
   @peer type Peer
 
   @peer type Input <: Peer { type Tie <: Single[Tagger] with Single[Archiver] }
@@ -236,8 +237,8 @@ package object sha256{
 
 @service(
   """{
-    |  "localDb":"mongo"
-    }"""
+  |  "localDb":"mongo"
+  |}"""
 ) object Archiver extends App{
   multitier start new Instance[Pipeline.Archiver](
     listen[Pipeline.Hasher] {
@@ -252,8 +253,8 @@ package object sha256{
 }
 @service(
   """{
-    |  "replicas":1
-  }"""
+  |  "replicas":1
+  |}"""
 ) object Hasher extends App {
   multitier start new Instance[Pipeline.Hasher](
     listen[Pipeline.Output] {
@@ -296,8 +297,8 @@ package object sha256{
 
 @gateway(
   """{
-    |  "ports":"8424"
-    }"""
+  |  "ports":"8424"
+  |}"""
 )
 object Input extends App {
   multitier start new Instance[Pipeline.Input](

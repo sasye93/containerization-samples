@@ -23,7 +23,7 @@ import thesis.listings.APIGateway.timeservice.{Formatter, GatewayApi, MultitierA
 import scala.concurrent.duration.Duration
 import scala.concurrent.{Await, Future, duration}
 
-@multitier object ConsumerApi extends GatewayApi{
+@multitier @containerize object ConsumerApi extends GatewayApi{
   @peer type Gateway <: { type Tie <: Optional[MultitierApi.Formatter] }
 
   private def asyncCall[T](f : Option[Future[T]]): String = f match {

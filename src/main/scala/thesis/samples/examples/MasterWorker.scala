@@ -25,8 +25,8 @@ object Task {
 
 @multitier @containerize(
   """{
-    |  "app": "masterworker"
-  }"""
+    |  "app":"masterworker"
+  |}"""
 ) object MasterWorker {
   @peer type Master <: { type Tie <: Multiple[Worker] }
   @peer type Worker <: { type Tie <: Single[Master] }

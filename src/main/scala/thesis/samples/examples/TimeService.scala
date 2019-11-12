@@ -60,7 +60,7 @@ import loci.container._
   """{
     |  "app": "timeservice",
     |  "jreBaseImage": "jre-alpine"
-    }"""
+    |}"""
 ) object MultitierApi extends ServerImpl with ClientImpl
 
 @service(

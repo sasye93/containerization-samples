@@ -98,7 +98,7 @@ import thesis.listings.APIGateway.gateway.api.ConsumerApi
     }
   }
 }
-@multitier object MultitierApi extends ServerImpl with FormatterImpl with ManipulatorImpl
+@multitier @containerize object MultitierApi extends ServerImpl with FormatterImpl with ManipulatorImpl
 
 @service object Server extends App {
   loci.multitier start new Instance[MultitierApi.Server](
