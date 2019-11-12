@@ -45,42 +45,11 @@ import loci.container._
 /**
   * Service implementation
   */
-object db{
-  def db() : Unit = {
-
-    import org.mongodb.scala._
-    import bson._
-
-    // Use a Connection String
-    val clientModule: MongoClient = MongoClient(Tools.globalDbIp(MultitierApi))
-    val clientService: MongoClient = MongoClient(Tools.localDbIp(Service))
-
-    val dbModule: MongoDatabase = clientModule.getDatabase("mydb")
-    val dbService: MongoDatabase = clientService.getDatabase("mydb")
-
-    //dbModule.createCollection("global")
-    dbService.createCollection("local")
-
-    val moduleCol = dbModule.getCollection("global")
-    val serviceCol = dbService.getCollection("local")
-
-    val doc: Document = bson.Document("name" -> "MongoDB", "type" -> "database", "count" -> 1, "info" -> bson.Document("x" -> 203, "y" -> 102))
-
-    val resultObserver = new Observer[Completed] {
-      override def onNext(result: Completed): Unit = println("Inserted")
-      override def onError(e: Throwable): Unit = println("Failed")
-      override def onComplete(): Unit = println("Completed")
-    }
-    moduleCol.insertOne(doc).subscribe(resultObserver)
-    serviceCol.insertOne(doc).subscribe(resultObserver)
-  }
-}
 @multitier protected[thesis] trait ServerImpl extends Api{
   @peer type Server <: Peer { type Tie <: Multiple[Client] }
   val time: Var[Long] on Server = on[Server] { implicit! => Var(0L) }
 
   def main() : Unit on Server = placed{ implicit! =>
-    db.db()
     while (true) {
       time set Calendar.getInstance.getTimeInMillis
       Thread sleep 1000
@@ -90,15 +59,13 @@ object db{
 @multitier @containerize(
   """{
     |  "app": "timeservice",
-    |  "globalDb": "mongo",
-    |  "stateful": "true"
+    |  "jreBaseImage": "jre-alpine"
     }"""
 ) object MultitierApi extends ServerImpl with ClientImpl
 
 @service(
   """{
     |  "type": "service",
-    |  "localDb": "mongo",
     |  "replicas": 2,
     |  "attachable": "false"
     |}"""

@@ -1,4 +1,0 @@
-#!/bin/sh
-docker rm --volumes -f thesis_samples_timeservice_client
-               |docker volume create thesis_samples_timeservice_client|docker run -id  --name thesis_samples_timeservice_client --network=thesis_samples_timeservice_client --volume thesis_samples_timeservice_client:/data --cap-add=NET_ADMIN --cap-add=NET_RAW --sysctl net.ipv4.conf.eth0.route_localnet=1 -t thesis_samples_timeservice_client
-                |docker network connect --alias thesis_samples_timeservice_client thesis_samples_timeservice_multitierapi thesis_samples_timeservice_clientdocker container inspect -f "Container 'thesis_samples_timeservice_client' connected to timeservice and thesis_samples_timeservice_multitierapi with ip={{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}." thesis_samples_timeservice_client

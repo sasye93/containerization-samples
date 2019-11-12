@@ -1,9 +1,0 @@
-FROM openjdk:8-jre AS jre-build
-           
-ENV SCALA_VERSION=2.12.8
-WORKDIR /
-RUN apt-get update && apt-get install -y apt-utils net-tools iputils-ping curl vim iptables procps
-RUN groupadd -r timeservice && useradd --no-log-init -r -g timeservice timeservice
-RUN mkdir -p /app && mkdir -p /var/lib/libs/ && chown timeservice:timeservice /app && chown timeservice:timeservice /var/lib/libs/
-USER timeservice:timeservice
-COPY . /var/lib/libs/
