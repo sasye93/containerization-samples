@@ -1,5 +1,7 @@
 # containerization-samples
 Samples for the ScalaLoci Containerization Extension. This should work out of the box. Make sure you have the containerize.jar in /lib, sbt should automatically set it up. If it doesn't work, you might need to manually add the plugin and the macros as library, see thesis, appendix/installation.
+
+For the prerequisites needed to run the project, see https://github.com/sasye93/containerization-extension. In short, make sure you have bash support on your machine and run sbt (v1.3.0 tested, adjust _project/build.properties_ for another version) inside the project dir to install dependencies.
 By default, images are pushed to scalalocicontainerize:thesis @ DockerHub.
 
 ## Structure
