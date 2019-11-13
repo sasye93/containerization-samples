@@ -32,6 +32,13 @@ Note that this project comprises a lot of services and different apps. Starting 
 By default, this project is run with the stage compiler option set to run, so the whole swarm is started after the build. You might want to remove this in case.
 You can either exclude subprojects from the build so that only a certain sample is build, or you start the subprojects individually by using _stack-XXX.sh_.
 
+Useful commands to connect to a running container (not service, only to containers):
+* docker attach <id> => connects std/stdout of the console to the container.
+* docker exec -it <id> bash => opens a new bash inside the container.
+* docker logs <id> => shows the stdout output produced by the container.
+
+For everything else, see thesis.
+
 For troubleshooting, see respective chapter in the thesis, and:
 - Sometimes, Docker seems to have an issue with dangling networks, images, containers, etc.: They don't exist anymore, but are still listed. This prevents the extension or Docker itself from re-creating it. Then, for example the extension throws an error like "network xxx not found.". Under _docker network ls_, the network is listed, but if you try to remove it with _docker network rm <id>_, you also get something like "network xxx doesn't exist.". In this case, restarting the docker machine (_docker-machine restart_) or totally resetting Docker to its default state might help in cleaning up.
 -----------
