@@ -79,13 +79,7 @@ package object db{
     |}"""
 ) object MultitierApi extends ServerImpl with ClientImpl
 
-@service(
-  """{
-    |  "localDb": "mongo",
-    |  "secrets": "mysecret",
-    |  "replicas": 2
-    |}"""
-) object Server extends App {
+@service("files/config.json") object Server extends App {
   multitier start new Instance[MultitierApi.Server](
     listen[MultitierApi.Client] { TCP(8181, Tools.publicIp) })
 }

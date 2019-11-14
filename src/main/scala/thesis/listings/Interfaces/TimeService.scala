@@ -1,6 +1,7 @@
 /**
   * This is an example for how to separate implementations using interfaces,
-  * so that services are separately deployable.
+  * so that services are separately deployable. This does not use containerization for simplicity,
+  * as this is a ScalaLoci thing.
   * This is listing 01 in the thesis.
   */
 package thesis.listings.Interfaces

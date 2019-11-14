@@ -1,8 +1,5 @@
 {
-  "public": true,
-  "replicas": 2,
-  "cpu_limit": "0.1",
-  "cpu_reserve": "0.1",
-  "memory_limit": "64M",
-  "localDb": "mongo"
+  "localDb": "mongo",
+  "secrets": "mysecret",
+  "replicas": 2
 }
