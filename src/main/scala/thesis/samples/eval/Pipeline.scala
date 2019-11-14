@@ -1,7 +1,8 @@
 /**
  * This is the containerized version of the pipeline evaluation example.
+ * This is the evaluation made in chapter 8 of the thesis.
  * remember to mask special characters in your http request, like space = %20, hashtag = %23.
-  * You can use cURL to post request, http://localhost:8424.
+ * You can use cURL to post request, http://localhost:8424.
  */
 
 package thesis.samples.eval
@@ -299,8 +300,7 @@ package object sha256{
   """{
   |  "ports":"8424"
   |}"""
-)
-object Input extends App {
+) object Input extends App {
   multitier start new Instance[Pipeline.Input](
     connect[Pipeline.Tagger] {
       TCP(Tools.resolveIp(Tagger), 8162)

@@ -98,7 +98,7 @@ object Task {
 }
 @service(
   """{
-    |  "replicas": 1
+    |  "replicas": 2
   }"""
 ) object Worker extends App{
   multitier start new Instance[MasterWorker.Worker](

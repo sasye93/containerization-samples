@@ -1,5 +1,5 @@
 /**
- * This is an example for how an API gateway that takes requests and directs them to the underlying services.
+ * This is an example for how an API gateway that takes requests and directs them to the underlying services could look like.
  * This is listing 02 in the thesis.
  */
 package thesis.listings.APIGateway.gateway.api

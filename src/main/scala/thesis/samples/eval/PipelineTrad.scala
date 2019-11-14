@@ -1,5 +1,5 @@
 /**
-  * This is the traditional, uncontainerized ScalaLoci version of the pipeline evaluation example.
+  * This is the traditional, uncontainerized ScalaLoci version of the pipeline evaluation example from chapter 8.
   * this needs a running mongoDB on localhost:27017 (one might simply run a docker mongo container).
   * remember to mask special characters in your http request, like space = %20, hashtag = %23.
   * You can use cURL to post request, http://localhost:8424.
