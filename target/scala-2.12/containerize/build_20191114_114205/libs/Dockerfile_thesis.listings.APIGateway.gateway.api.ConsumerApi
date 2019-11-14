@@ -1,0 +1,9 @@
+FROM openjdk:8-jre AS jre-build
+           
+ENV SCALA_VERSION=2.12.8
+WORKDIR /
+RUN apt-get update && apt-get install -y apt-utils net-tools iputils-ping curl vim iptables procps
+RUN groupadd -r containerized_scalaloci_project && useradd --no-log-init -r -g containerized_scalaloci_project containerized_scalaloci_project
+RUN mkdir -p /app && mkdir -p /var/lib/libs/ && chown containerized_scalaloci_project:containerized_scalaloci_project /app && chown containerized_scalaloci_project:containerized_scalaloci_project /var/lib/libs/
+USER containerized_scalaloci_project:containerized_scalaloci_project
+COPY . /var/lib/libs/

@@ -1,0 +1,9 @@
+FROM openjdk:8-jre AS jre-build
+           
+ENV SCALA_VERSION=2.12.8
+WORKDIR /
+RUN apt-get update && apt-get install -y apt-utils net-tools iputils-ping curl vim iptables procps
+RUN groupadd -r timeservice_gateway && useradd --no-log-init -r -g timeservice_gateway timeservice_gateway
+RUN mkdir -p /app && mkdir -p /var/lib/libs/ && chown timeservice_gateway:timeservice_gateway /app && chown timeservice_gateway:timeservice_gateway /var/lib/libs/
+USER timeservice_gateway:timeservice_gateway
+COPY . /var/lib/libs/

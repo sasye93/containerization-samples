@@ -1,0 +1,9 @@
+FROM openjdk:8-jre AS jre-build
+           
+ENV SCALA_VERSION=2.12.8
+WORKDIR /
+RUN apt-get update && apt-get install -y apt-utils net-tools iputils-ping curl vim iptables procps
+RUN groupadd -r masterworker && useradd --no-log-init -r -g masterworker masterworker
+RUN mkdir -p /app && mkdir -p /var/lib/libs/ && chown masterworker:masterworker /app && chown masterworker:masterworker /var/lib/libs/
+USER masterworker:masterworker
+COPY . /var/lib/libs/

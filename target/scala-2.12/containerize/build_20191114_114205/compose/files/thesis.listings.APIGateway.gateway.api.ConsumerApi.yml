@@ -1,0 +1,64 @@
+version: "3.7"
+services:
+  apigateway:
+    # configuration for apigateway
+    image: scalalocicontainerize/thesis:thesis_listings_apigateway_gateway_api_apigateway
+    stdin_open: true
+    tty: true
+    deploy:
+      mode: replicated
+      replicas: 1
+      resources:
+        limits:
+          cpus: "0.25"
+          memory: 256M
+        reservations:
+          cpus: "0.1"
+          memory: 64M
+      restart_policy:
+        condition: any
+      rollback_config:
+        order: start-first
+      update_config:
+        parallelism: 2
+        failure_action: rollback
+        order: start-first
+    volumes:
+      - type: volume
+        source: thesis_listings_apigateway_gateway_api_apigateway
+        target: /data
+    ports:
+      - "8080:8080"
+      - "8081:8081"
+    networks:
+      containerized_scalaloci_project:
+        aliases:
+          - thesis_listings_apigateway_gateway_api_apigateway
+      thesis_listings_apigateway_gateway_api_consumerapi:
+        aliases:
+          - thesis_listings_apigateway_gateway_api_apigateway
+    labels:
+      com.loci.containerize.module: "thesis.listings.APIGateway.gateway.api.ConsumerApi"
+      com.loci.containerize.description: "No description available for this service."
+      com.loci.containerize.api: "
+Description for service: thesis_listings_apigateway_gateway_api_apigateway
+----------------
+  SERVICE API
+----------------
+thesis_listings_apigateway_gateway_api_apigateway provides the following to services:
+ -
+
+thesis_listings_apigateway_gateway_api_apigateway requires the following services:
+@TCP	:8153		[ thesis.listings.APIGateway.timeservice.MultitierApi.Formatter ]
+
+"
+networks:
+  containerized_scalaloci_project:
+    external: true
+  thesis_listings_apigateway_gateway_api_consumerapi:
+    driver: overlay
+    attachable: true
+    internal: false
+    name: thesis_listings_apigateway_gateway_api_consumerapi
+volumes:
+  thesis_listings_apigateway_gateway_api_apigateway:

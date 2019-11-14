@@ -1,0 +1,4 @@
+#!/bin/sh
+docker network disconnect containerized_scalaloci_project thesis_listings_apigateway_gateway_api_apigateway
+               |docker network disconnect thesis_listings_apigateway_gateway_api_consumerapi thesis_listings_apigateway_gateway_api_apigatewaydocker stop thesis_listings_apigateway_gateway_api_apigateway
+docker container rm -f thesis_listings_apigateway_gateway_api_apigateway
